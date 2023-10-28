@@ -1,7 +1,29 @@
+import UserModel from '../Models/User.model.js'
+
 export const Login = (req,res) => {
     res.send("Hi from login!");
 }
 
-export const Register = (req,res) => {
-    res.send("Hi from register!");
+export const Register = async (req,res) => {
+    try{
+        const {name,email,password,number} = req.body;
+        if(!name || !email || !password || !number) return res.status(401).json({success: false, message: "All fields are mandatory."})
+
+        const user = new UserModel({
+            name: name,
+            email,
+            password,
+            number
+        })
+
+        await user.save();
+
+        return res.status(200).json({success: true, message: "Registration Successfull."})
+    } catch(error){
+        return res.status(500).json({success: false, message: error})
+    }
+}
+
+export const getCurrentUser = (req,res) => {
+    res.send('HI!')
 }
