@@ -28,6 +28,7 @@ export const Login = async (req,res) => {
 
 export const Register = async (req,res) => {
     try{
+        
         const {name,email,password,number} = req.body;
         if(!name || !email || !password || !number) return res.status(401).json({success: false, message: "All fields are mandatory."})
 
