@@ -13,10 +13,11 @@ export const getAllProducts = async (req, res) => {
 
 export const getSingleProduct = async (req, res) => {
     try{
-        const {id} = req.body;
+        const {id} = req.query;
         if(!id) return res.status(401).json({success:false, message:"No product ID provided"});
+        console.log(id);
 
-        const product = await ProductModel.findById({_id:id});
+        const product = await ProductModel.findById(id);
         if(!product) return res.status(401).json({success:false, message:"Product not found"});
 
         return res.status(200).json({success:true, product:product});
@@ -93,4 +94,35 @@ export const getFilteredReuslts = async (req,res) => {
     }catch(error){
         return res.status(500).json({success:false, message:error.message}); 
     }
+}
+
+export const yourProducts = async (req,res) => {
+    try{
+        const {id} = req.body;
+        
+        if(!id) return res.status(401).json({success:false, message:"No user ID provided"});
+
+        const products = await ProductModel.find({id:id});
+        if(!products) return res.status(401).json({success:false, message:"Products not found"});
+
+        return res.status(200).json({success:true, products:products});
+
+    }catch(error){
+        return res.status(500).json({success:false, message:error.message}); 
+    }
+}
+
+export const updateProduct = async (req,res) => {
+    try{
+        const {id, product} = req.body;
+        if(!id || !product) return res.status(401).json({success:false, message:"Product Id or Details not provided"});
+    
+        const updatedProduct = await ProductModel.findByIdAndUpdate(id,{...product});
+        if(!updatedProduct) return res.status(401).json({success:false, message:"Product could not be updated"})
+
+        return res.status(200).json({success:true, message:"Product updated successfully"});
+    }catch(error){
+        return res.status(500).json({success:false, message:error.message}); 
+    }
+    
 }
