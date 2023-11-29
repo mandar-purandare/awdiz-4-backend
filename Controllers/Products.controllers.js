@@ -126,3 +126,18 @@ export const updateProduct = async (req,res) => {
     }
     
 }
+
+export const deleteProduct = async (req, res) => {
+    try{
+        const {id} = req.query;
+        if(!id) return res.status(401).json({success:false, message:"Product ID not provided"});
+
+        // const {deletCount} = await ProductModel.findByIdAndRemove(id);
+        const deletCount = await ProductModel.findByIdAndDelete(id);
+        //console.log(deletCount);
+        //return res.status(200).json({success:true, message:"Item deleted successfully"});
+         if(deletCount) return res.status(200).json({success:true, message:"Item deleted successfully"});
+    }catch(error){
+        return res.status(500).json({success:false, message:error.message}); 
+    }
+}
