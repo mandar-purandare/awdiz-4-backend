@@ -48,3 +48,18 @@ export const getCartProducts = async (req,res) => {
         return res.status(500).json({success:false, message:error.message})
     }
 }
+
+export const deleteCartProduct = async (req,res) => {
+    try{
+            const { productId, userId} = req.body;
+            if(!productId || !userId) return res.status(401).json({success:false, message:"Product ID or User ID not provided"});
+            let user = await UserModel.findById(userId);
+            let cart = user.cart;
+            let deleteIdx = cart.indexOf(productId);
+            cart.splice(deleteIdx,1);
+            user = await UserModel.findByIdAndUpdate(userId,{cart});
+            return res.status(200).json({success:true, message:"Product removed from cart", cart:cart});
+    }catch(error){
+        return res.status(500).json({success:false, message:error.message})
+    }
+}
